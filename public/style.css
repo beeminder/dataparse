@@ -1,0 +1,45 @@
+body {
+  font-family: helvetica, arial, sans-serif;
+  margin: 25px;
+  background-color: #fef2c0;
+}
+
+input {
+  padding: 5px;
+  width: 50%;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+  font-size: 16px;
+}
+
+footer {
+  margin-top: 50px;
+  padding-top: 25px;
+  border-top: 1px solid lightgrey;
+}
+
+footer > a {
+  color: #BBBBBB;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th, td, tr {
+  padding-right: 40px;
+  padding-left: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ffea51;
+}
+
+.topics tr { line-height: 14px; }
+
+tr.container {height:0px;}
+
+tr:hover { background-color: #ffea51 }
+
+textarea { 
+  font-family: monospace; 
+  font-size: 14px;
+}

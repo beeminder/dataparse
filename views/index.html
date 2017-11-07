@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Beeminder datapoint format checker</title>
+<meta name="description" 
+      content="Constructing the monster regex for Beeminder datapoints">
+<link id="favicon" 
+      rel="icon" 
+      href="https://gomix.com/favicon-app.ico" 
+      type="image/x-icon">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<header>
+<h1>Beeminder datapoint format checker</h1>
+</header>
+
+<main>
+
+<form autocomplete="off">
+  <input id="dfield" type="text" placeholder="data!">
+</form>
+<br>
+<section>
+  <table id="dptable">
+    <tr>
+      <th></th>
+      <th>urtext</th>
+      <th>date</th>
+      <th>value</th>
+      <th>comment</th>
+    </tr>
+  </table>
+
+  <h3>Monster Regex</h3>
+  <textarea id="smonster" readonly rows="5" cols="83">
+    
+    javascript problems
+  </textarea>
+  <h3>Monster Regex As String</h3>
+  <textarea id="monster" readonly rows="5" cols="83">
+    
+    javascript problems
+  </textarea>
+</section>
+
+</main>
+
+<footer>
+<a href="https://glitch.com/#!/project/d"
+   title="I got the subdomain 'd' just for the hipster cred">
+Hack on this with us in Glitch
+</a>
+</footer>
+
+<script src="https://code.jquery.com/jquery-2.2.1.min.js"
+        integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
+        crossorigin="anonymous"></script>
+<script src="/client.js"></script>
+
+</body>
+</html>
