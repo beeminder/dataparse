@@ -1,21 +1,22 @@
 {
   "name": "beemdata",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Fun with regexes",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.4"
   },
   "engines": {
-    "node": "6"
+    "node": "10"
   },
   "keywords": [
     "node",
-    "gomix",
-    "express"
+    "glitch",
+    "express",
+    "beeminder"
   ],
   "repository": "d.glitch",
   "license": "MIT"
