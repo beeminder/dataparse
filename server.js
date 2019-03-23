@@ -1,8 +1,12 @@
-var express = require('express')
-var app = express()
+const express = require('express')
+const app = express()
 
-// Test suite (should pair with expected parsings)
-var datapoints = [
+// Test suite
+// TODO: Instead of just a list of strings, this should be a list of lists 
+// or objects that give the urtext along with how we expect it to be parsed.
+let datapoints = [
+  '^ -0:30 "beedroid accepts negative amounts of times like this..."',
+  '1 123 maybe we shouldn\'t ought to need quotes around the comment...',
   '^ 1 "yay carets"',
   '^^   .2',
   '31 3.   ""',
@@ -27,18 +31,16 @@ var datapoints = [
   '2017 1 19.7 0 "fractional days not allowed"',
 ]
 
-app.use(express.static('public'))
+app.use(express.static('pub'))
 
 app.get("/", (req, resp) => { resp.sendFile(__dirname + '/views/index.html') })
 app.get("/datapoints", (req, resp) => { resp.send(datapoints) })
 
-// could also use the POST body instead of query string: 
-// http://expressjs.com/en/api.html#req.body
 app.post("/datapoints", (req, resp) => {
   datapoints.push(req.query.datapoint)
   resp.sendStatus(200)
 })
 
-var listener = app.listen(process.env.PORT, () => {
+const listener = app.listen(process.env.PORT, () => {
   console.log('The d app is running on port ' + listener.address().port)
 })
