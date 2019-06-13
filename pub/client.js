@@ -54,12 +54,15 @@ var rdata = regexcat([
   /\s*$/,
 ])
 
-// Return an html string for whether a datapoint is good or bad
-function showgb(s) {
-  return rdata.test(s) ? '<font color="green">✔</font>' : 
-                         '<font color="red">✖</font>'
-}
+const GREEN = '<font color="green">✔</font>'
+const REDEX = '<font color="red">✖</font>'
+const GRAYU = '<font color=#BBBBBB>undefined</font>'
 
+
+// Return an html string for whether a datapoint is good or bad
+function showgb(s) { return rdata.test(s) ? GREEN : REDEX }
+
+//Suggestion: This is somewhat messy, may be worth considering changing this into a boolean instead and inserting the HTML at the point of output
 // Helper for insertrow(); takes datapoint and returns array of 5 strings
 function parse(d) {
   var marr = d.match(rdata) // match array (0th element is the whole match)
@@ -67,9 +70,7 @@ function parse(d) {
   if (!marr) { return [showgb(d), d, '', '', ''] }
   if (marr.length !== 4) { return ['??', d, '', '', 'REGEX_MUST_BE_BROKEN'] }
   [date, value, comment] = marr.slice(1)
-  if (typeof(comment)==='undefined') { 
-    comment = '<font color=#BBBBBB>undefined</font>'
-  }
+  if (typeof(comment)==='undefined') { comment = GRAYU }
   return [showgb(d), d, date, value, comment]
 }
 
@@ -92,51 +93,55 @@ function ordinalize(n) {
 // const s = ["th", "st", "nd", "rd"]; const v = n % 100
 // return n + (s[(v-20)%10] || s[v] || s[0])
 
-$(() => {
-  var dcur = '' // current datapoint as typed so far
-  var lastpress = -1 // last keypress
-  var datapoint
+if (typeof window === 'undefined') {
+  module.exports = { parse, GREEN, REDEX, GRAYU }
+} else {
+  $(() => {
+    var dcur = '' // current datapoint as typed so far
+    var lastpress = -1 // last keypress
+    var datapoint
 
-  var date = new Date()
-  var day = date.getDate()
-  $('#dfield').attr('placeholder', `${day} 123 ` 
-    + `"optional comment about reporting 123 on the ${ordinalize(day)}"`)
+    var date = new Date()
+    var day = date.getDate()
+    $('#dfield').attr('placeholder', `${day} 123 ` 
+      + `"optional comment about reporting 123 on the ${ordinalize(day)}"`)
 
-  // fetch the initial sample datapoints from the server
-  $.get('/datapoints', (datapoints) => {
-    datapoints.forEach(x => insertrow(x, -1))
+    // fetch the initial sample datapoints from the server
+    $.get('/datapoints', (datapoints) => {
+      datapoints.forEach(x => insertrow(x, -1))
 
-    $('#rmonster').html(rdata.source)
-    $('#smonster').html(JSON.stringify(rdata.source))
-    const r = regexcat([/^\s*/, rval, /\s*$/]).source
-    $('#rmonsterv').html(r)
-    $('#smonsterv').html(JSON.stringify(r))
-  })
+      $('#rmonster').html(rdata.source)
+      $('#smonster').html(JSON.stringify(rdata.source))
+      const r = regexcat([/^\s*/, rval, /\s*$/]).source
+      $('#rmonsterv').html(r)
+      $('#smonsterv').html(JSON.stringify(r))
+    })
 
-  $('form').submit(event => {
-    event.preventDefault()
-    datapoint = $('input').val()
-    $.post('/datapoints?' + $.param({datapoint: datapoint}), () => {
-      insertrow(datapoint)
-      $('input').val('')
-      $('input').focus()
+    $('form').submit(event => {
+      event.preventDefault()
+      datapoint = $('input').val()
+      $.post('/datapoints?' + $.param({datapoint: datapoint}), () => {
+        insertrow(datapoint)
+        $('input').val('')
+        $('input').focus()
+      })
+    })
+    $('form').keydown(event => {
+      if (event.which === 38 && lastpress !== 38) { // up-arrow: show last datapt
+        lastpress = 38
+        dcur = $('#dfield').val()
+        $('#dfield').val(datapoint)
+        return false // this makes the cursor go to the end for whatever reason
+      } else if (event.which === 40) { // dn-arrow: back to what user was typing
+        lastpress = 40
+        $('#dfield').val(dcur)
+        return false
+      } else { 
+        lastpress = event.which
+      }
     })
   })
-  $('form').keydown(event => {
-    if (event.which === 38 && lastpress !== 38) { // up-arrow: show last datapt
-      lastpress = 38
-      dcur = $('#dfield').val()
-      $('#dfield').val(datapoint)
-      return false // this makes the cursor go to the end for whatever reason
-    } else if (event.which === 40) { // dn-arrow: back to what user was typing
-      lastpress = 40
-      $('#dfield').val(dcur)
-      return false
-    } else { 
-      lastpress = event.which
-    }
-  })
-})
+}
 
 // ---------------------------------- 80chars --------------------------------->
 
@@ -153,8 +158,8 @@ Alys's proposal for just the datapoint value in Beedroid:
 
 .compile("^\\s*((?:(?:\\+|\\-)?(?:\\d+\\.?\\d*|\\d*\\.?\\d+))|(?:(?:\\+|\\-)?(\\d+)\\:(\\d\\d)(?:\\:(\\d\\d))?)|(?:(?:\\+|\\-)?\\:(\\d\\d)(?:\\:(\\d\\d))?))\\s*$");
 
-*/
 // alys:
 var a = /((?:[\+\-]?(?:\d+\.?\d*|\d*\.?\d+))|(?:(?:\+|\-)?(\d+)\:(\d\d)(?:\:(\d\d))?)|(?:(?:\+|\-)?\:(\d\d)(?:\:(\d\d))?))/
 // dreev:
 var d = /[\+\-]?(?:\d+\.?\d*|\.\d+)|(?:\d*\:[0-5]\d(?:\:[0-5]\d)?|0?0?\:\d\d)/
+*/
